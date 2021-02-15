@@ -16,8 +16,8 @@ app.get('/', function (req, res) {
 //send GroupMe Message
 function sendMessage(message, botId) {
   let headers = {
-	'User-Agent': 'BigBetsBot/1.0',
-	'Content-Type': 'application/json'
+    'User-Agent': 'BigBetsBot/1.0',
+    'Content-Type': 'application/json'
   }
 
   let options = {
@@ -27,18 +27,19 @@ function sendMessage(message, botId) {
   }
 
   superagent
-	.post(options.url)
-	.send(options.form)
-	.set(options.headers)
-	.then(res => {
-	  console.log('Message sent!');
-	  console.log(res);
+    .post(options.url)
+    .send(options.form)
+    .set(options.headers)
+    .then(res => {
+      console.log('Message sent!');
+      console.log(res);
 	})
 	.catch(err => {
 	  console.log('Message not sent, unsuccessful');
 	  console.log(err);
 	})
 }
+
 function parseMessage(event) { //make sure the message is not truncated
 	let message = '';
 	let messagePrefix = `${event.user.screen_name}`;
@@ -48,9 +49,9 @@ function parseMessage(event) { //make sure the message is not truncated
 		message = event.text;
 	} else {
 		message = event.extended_tweet.full_text;
-    }
+  }
     
-    return `${messagePrefix}: ${message} - https://twitter.com/${event.user.id_str}/status/${event.id_str}`;
+  return `${messagePrefix}: ${message} - https://twitter.com/${event.user.id_str}/status/${event.id_str}`;
 }
 
 const config = {
@@ -61,11 +62,11 @@ const config = {
 }
 
 const twitter = new Twitter(config);
-let params = { follow: process.env.FOLLOWING };
-let stream = twitter.stream('statuses/filter', params);
+const params = { follow: process.env.FOLLOWING };
+const stream = twitter.stream('statuses/filter', params);
 
 stream.on('error', (error) => {
-	console.log('IN ERROR!!!!!!!', error);
+	console.log('ERROR', error);
 });
 
 stream.on('tweet', (event) => {
@@ -93,6 +94,7 @@ stream.on('connect', function (request) {
 	console.log('CONNECTION ATTEMPT');
 });
 
+// Health Check
 let http = require('http');
 setInterval(function() {
     http.get('http://bigbetsbot.herokuapp.com/');
