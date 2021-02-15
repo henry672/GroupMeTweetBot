@@ -54,12 +54,21 @@ function parseMessage(event) { //make sure the message is not truncated
   return `${messagePrefix}: ${message} - https://twitter.com/${event.user.id_str}/status/${event.id_str}`;
 }
 
+// verify tweet originated from the selected followers and is not a reply
+function verifyTweet(event) {
+  let verified = false;
+  if (process.env.FOLLOWING.toString().includes(event.user.id_str) && !event.in_reply_to_user_id && !event.in_reply_to_status_id) {
+    verified = true;
+  }
+  return verified;
+}
+
 const config = {
 	consumer_key: process.env.CONSUMER_KEY,
 	consumer_secret: process.env.CONSUMER_SECRET,
 	access_token: process.env.ACCESS_TOKEN,
 	access_token_secret: process.env.ACCESS_TOKEN_SECRET
-}
+};
 
 const twitter = new Twitter(config);
 const params = { follow: process.env.FOLLOWING };
@@ -70,7 +79,7 @@ stream.on('error', (error) => {
 });
 
 stream.on('tweet', (event) => {
-	if (process.env.FOLLOWING.toString().includes(event.user.id_str)) {
+	if (verifyTweet(event)) {
 		console.log('TWEET EVENT', event);
 		sendMessage(parseMessage(event), process.env.BOT_ID);
 	} else {
@@ -91,11 +100,11 @@ stream.on('connected', function (response) {
 });
 
 stream.on('connect', function (request) {
-	console.log('CONNECTION ATTEMPT');
+	console.log('CONNECTION ATTEMPTED');
 });
 
 // Health Check
 let http = require('http');
 setInterval(function() {
     http.get('http://bigbetsbot.herokuapp.com/');
-}, 300000)
+}, 300000);
