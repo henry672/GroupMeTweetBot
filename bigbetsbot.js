@@ -48,7 +48,7 @@ function parseMessage(event) { //make sure the message is not truncated
 	} else if(event.extended_tweet) {
 		message = event.extended_tweet.text;
 	} else {
-		message = event.full_text;
+		message = event.text;
   	}
     
   return `${messagePrefix}: ${message} - https://twitter.com/${event.user.id_str}/status/${event.id_str}`;
