@@ -43,9 +43,9 @@ function sendMessage(message, botId) {
 function parseMessage(event) { //make sure the message is not truncated
 	let message = '';
 	let messagePrefix = `${event.user.screen_name}`;
-	if (typeof event.retweeted_status != 'undefined') {
-		message = `RT @ ${event.retweeted_status.user.screen_name}: ${event.retweeted_status.extended_tweet.full_text}`;
-	} else if(typeof event.extended_tweet === 'undefined') {
+	if (event.retweeted_status) {
+		message = `RT @ ${event.retweeted_status.user.screen_name}: ${event.retweeted_status.text}`;
+	} else if(event.extended_tweet) {
 		message = event.text;
 	} else {
 		message = event.extended_tweet.full_text;
