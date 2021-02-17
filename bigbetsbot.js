@@ -46,7 +46,7 @@ function parseMessage(event) { //make sure the message is not truncated
 	if (event.retweeted_status) {
 		message = `RT @ ${event.retweeted_status.user.screen_name}: ${event.retweeted_status.text}`;
 	} else if(event.extended_tweet) {
-		message = event.extended_tweet.text;
+		message = event.extended_tweet.full_text;
 	} else {
 		message = event.text;
   	}
