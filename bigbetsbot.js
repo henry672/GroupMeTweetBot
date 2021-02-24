@@ -4,6 +4,8 @@ let express = require('express');
 let superagent = require('superagent');
 let bodyParser = require('body-parser');
 let Twitter = require('twit');
+let schedule = require('node-schedule');
+let {exec} = require('child_process');
 
 //landing page 
 let app = express();
@@ -81,7 +83,7 @@ stream.on('error', (error) => {
 stream.on('tweet', (event) => {
 	if (verifyTweet(event)) {
 		console.log('TWEET EVENT', event);
-		sendMessage(parseMessage(event), process.env.BOT_ID);
+		// sendMessage(parseMessage(event), process.env.BOT_ID);
 	} else {
 		// console.log('REPLY/RT LOG', event);
 	}
@@ -108,3 +110,32 @@ let http = require('http');
 setInterval(function() {
     http.get('http://bigbetsbot.herokuapp.com/');
 }, 300000);
+
+// Cron Jobs to startup/bring down app
+const downRule = new schedule.RecurrenceRule();
+downRule.minute = 0;
+downRule.hour = 18;
+downRule.tz = 'America/Chicago';
+downRule.dayOfWeek = [new schedule.Range(1, 5)];
+
+const downJob = schedule.scheduleJob(downRule, () => {
+	let shutdown = exec('sh dynos.sh 0', (error, stdout, stderr) => {
+		console.log(stderr);
+		console.log(stdout);
+		console.log(error);
+	});
+});
+
+const upRule = new schedule.RecurrenceRule();
+upRule.minute = 0;
+upRule.hour = 8;
+upRule.tz = 'America/Chicago';
+upRule.dayOfWeek = [new schedule.Range(1, 5)];
+
+const upJob = schedule.scheduleJob(upRule, () => {
+	let shutdown = exec('sh dynos.sh 1', (error, stdout, stderr) => {
+		console.log(stderr);
+		console.log(stdout);
+		console.log(error);
+	});
+});
