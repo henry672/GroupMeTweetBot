@@ -83,7 +83,7 @@ stream.on('error', (error) => {
 stream.on('tweet', (event) => {
 	if (verifyTweet(event)) {
 		console.log('TWEET EVENT', event);
-		// sendMessage(parseMessage(event), process.env.BOT_ID);
+		sendMessage(parseMessage(event), process.env.BOT_ID);
 	} else {
 		// console.log('REPLY/RT LOG', event);
 	}
