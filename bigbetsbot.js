@@ -15,6 +15,12 @@ app.get('/', function (req, res) {
   res.send('Deploy Successful!');
 });
 
+app.post('http://https://bigbetsbot.herokuapp.com/bot_callback', function(req, res) {
+	console.log('REQUEST');
+	console.log(req);
+	console.log('RESPONSE');
+	console.log(res);
+})
 //send GroupMe Message
 function sendMessage(message, botId) {
   let headers = {
