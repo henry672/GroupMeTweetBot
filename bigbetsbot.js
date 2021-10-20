@@ -15,7 +15,7 @@ app.get('/', function (req, res) {
   res.send('Deploy Successful!');
 });
 
-app.post('https://bigbetsbot.herokuapp.com/bot_callback', function(req, res) {
+app.post('/bot_callback', function(req, res) {
 	console.log('REQUEST');
 	console.log(req);
 	console.log('RESPONSE');
